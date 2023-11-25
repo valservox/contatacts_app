@@ -72,7 +72,7 @@ def autosave():
         os.remove(oldest_file)
 
     os.chdir(autosave_dir)
-    timestamp = datetime.datetime.now().timestamp()
+    timestamp = int(datetime.datetime.now().timestamp())
     autosave_name = f"autosave_{timestamp}.json"
 
     print("Автосохранение телефонной книги...")
@@ -104,6 +104,10 @@ def save():
 
     except:
         print("Ошибка!","Телефонная книга не сохранена",sep="\n",end="\n\n")
+
+    return
+
+def load():
 
     return
 
@@ -182,7 +186,7 @@ def main_cycle():
                         # 'find': [find_contact,"Найти контакт"],
                         # 'all': [show_all, "Показать все контакты"],
                         'edit': [edit_contact,"Изменить контакт"],
-                        # 'load': [load,"Загрузить телефонную книгу"],
+                        'load': [load,"Загрузить телефонную книгу"],
                         'save': [save,"Сохранить телефонную книгу"],
                         'close': [close_app,"Закрыть приложение"],
                         }
