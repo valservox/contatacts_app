@@ -24,37 +24,88 @@
 
 import os
 import json
+import datetime
 
-phonebook = dict()
 
-phonebook['Boyle'] = {'phones': [1212121,5555555],'email': '777@mail.com', 'birthday': '10.10.1990'}
+save_dir = r"savefiles"
+autosave_dir = r"savefiles\autosaves"
 
 # Операции
 
-def import_contacts():
+def get_file_list(dir):
 
-    import_dir = r"C:\Users\valeo\Documents\gb_python\sem_8\contatacts_app\import"
-    os.chdir(import_dir)
+    file_list = os.listdir(dir)
+    full_path = ["{0}/{1}".format(dir,x) for x in file_list]
 
-    file_list = [file_path for file_path in os.listdir(import_dir) if os.path.isfile(os.path.join(import_dir, file_path))]
+    return (file_list, full_path)
 
-    print('Доступные файлы для импорта: \n')
+def autoload():
+
+    all_files = get_file_list(autosave_dir)[1] + get_file_list(save_dir)[1] 
     
-    for i, j in enumerate(file_list):
-        print(f'{i} - {j}')
+    oldest_file = min(all_files, key=os.path.getctime)
 
-    n_file = int(input('Укажите номер файла для импорта контактов: '))
+    print("Загрузка телефонной книги...")
 
-    data = os.open(file_list[n_file],'r')
+    try:
 
-    for line in data:
-        print(line)
+        with open(oldest_file, "r", encoding="utf-8") as ct:
+            
+            phonebook = json.load(ct)
+            print("Загрузка завершена")
 
-    data.close()
+    except:
 
+        print("Ошибка!","Телефонная книга не загружена!",sep="\n")
+
+        phonebook = dict()
+
+    return phonebook
+
+def autosave():
+
+    os.chdir(autosave_dir) if os.getcwd().basename != autosave_dir else None
+
+    func_res = get_file_list(autosave_dir)
+    file_list, full_path = func_res[0], func_res[1]
+
+    if len(file_list) == 25:
+        
+        oldest_file = min(full_path, key=os.path.getctime)
+        os.remove(oldest_file)
+
+    timestamp = datetime.datetime.now().timestamp()
+    autosave_name = f"autosave_{timestamp}.json"
+
+    print("Автосохранение телефонной книги...")
+
+    try:
+
+        with open(autosave_name, "w", encoding="utf-8") as ct:
     
+            json.dump(phonebook, ct)   
+            print("Автосохраниение завершено")
 
+    except:
+        print("Ошибка!","Телефонная книга не сохранена",sep="\n")
+    
+    return
 
+def save():
+
+    os.chdir(save_dir) if os.getcwd().basename != save_dir else None
+    
+    save_name = input("Введите имя файла для сохранения: ")
+
+    try:
+
+        with open(save_name, "w", encoding="utf-8") as ct:
+    
+            json.dump(phonebook, ct)   
+            print("Cохраниение завершено")
+
+    except:
+        print("Ошибка!","Телефонная книга не сохранена",sep="\n")
 
     return
 
@@ -64,7 +115,7 @@ def edit_contact():
 
     def edit_phone():
 
-        n_phone = int(input(f'У контакта {name} Несколько телефонов. Введите порядковый номер для редактирования')) if len(phonebook[name]['phones']) > 1 else 1
+        n_phone = int(input(f'У контакта {name} Несколько телефонов. Введите порядковый номер для редактирования: ')) if len(phonebook[name]['phones']) > 1 else 1
 
         new_phone = int(input(f'Введите номер телефона {n_phone} для контакта {name}: '))
 
@@ -74,7 +125,7 @@ def edit_contact():
     
     def edit_email():
     
-        new_email = input(f'Введите новый Email для контакта {name}:')
+        new_email = input(f'Введите новый Email для контакта {name}: ')
 
         phonebook[name]['email'] = new_email
     
@@ -82,7 +133,7 @@ def edit_contact():
     
     def edit_birthdate():
     
-        new_birthdate = input(f'Введите дату рождения для контакта {name}:')
+        new_birthdate = input(f'Введите дату рождения для контакта {name}: ')
 
         phonebook[name]['birthday'] = new_birthdate
     
@@ -107,13 +158,23 @@ birthdate - Дата рождения
         edit_dict[field]()
 
     except:
-        print('Команда не найдена')
+        print("Ошибка!","Контакт или параметр контакта не найдены",sep="\n")
+
+    autosave()
+
+    return
+
+def close_app():
+
+    autosave()
+
+    globals()['app_active'] = False
+
+    return
 
 # Словарь операций
 
 def main_cycle():
-
-    app_active = True
 
     operations_dict = {
                 #    'add': add_contact, 
@@ -121,30 +182,27 @@ def main_cycle():
                 #    'find': find_contact,
                 #    'all': show_all, 
                    'edit': edit_contact,
-                   'import': import_contacts,
-                #    'export': export_contacts
+                #    'import': import_contacts,
+                #    'export': export_contacts,
+                    'close': close_app,
                    }
 
     while app_active:
 
-        print("""Доступные команды:
+        print(f"""В книге  
+
+Доступные команды:
                
 add - добавить контакт 
 del - удалить контакт
 find - поиск контакта
 all - показать все контакты
-close - закрыть приложение 
+close - закрыть приложение
 edit - изменить контакт
 """)
         
         command = input('Введите комманду: ')
-
-        if command == 'close':
             
-            print('Закрытие приложения')
-            
-            break    
-        
         try: 
             operations_dict[command]()
         
@@ -160,4 +218,6 @@ edit - изменить контакт
             }
 '''
 
+app_active = True
+phonebook = autoload()
 main_cycle()
