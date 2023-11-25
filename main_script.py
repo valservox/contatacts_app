@@ -43,7 +43,7 @@ def autoload():
 
     all_files = get_file_list(autosave_dir)[1] + get_file_list(save_dir)[1] 
     
-    oldest_file = min(all_files, key=os.path.getctime)
+    oldest_file = max(all_files, key=os.path.getctime)
 
     print("Загрузка телефонной книги...")
 
@@ -56,7 +56,7 @@ def autoload():
 
     except:
 
-        print("Ошибка!","Телефонная книга не загружена!",sep="\n")
+        print("Ошибка!","Телефонная книга не загружена!",sep="\n",end="\n\n")
 
         phonebook = dict()
 
@@ -64,16 +64,14 @@ def autoload():
 
 def autosave():
 
-    os.chdir(autosave_dir) if os.getcwd().basename != autosave_dir else None
-
-    func_res = get_file_list(autosave_dir)
-    file_list, full_path = func_res[0], func_res[1]
+    file_list, full_path = get_file_list(autosave_dir)[0], get_file_list(autosave_dir)[1]
 
     if len(file_list) == 25:
         
         oldest_file = min(full_path, key=os.path.getctime)
         os.remove(oldest_file)
 
+    os.chdir(autosave_dir)
     timestamp = datetime.datetime.now().timestamp()
     autosave_name = f"autosave_{timestamp}.json"
 
@@ -87,7 +85,7 @@ def autosave():
             print("Автосохраниение завершено")
 
     except:
-        print("Ошибка!","Телефонная книга не сохранена",sep="\n")
+        print("Ошибка!","Телефонная книга не сохранена",sep="\n",end="\n\n")
     
     return
 
@@ -105,7 +103,7 @@ def save():
             print("Cохраниение завершено")
 
     except:
-        print("Ошибка!","Телефонная книга не сохранена",sep="\n")
+        print("Ошибка!","Телефонная книга не сохранена",sep="\n",end="\n\n")
 
     return
 
@@ -158,7 +156,7 @@ birthdate - Дата рождения
         edit_dict[field]()
 
     except:
-        print("Ошибка!","Контакт или параметр контакта не найдены",sep="\n")
+        print("Ошибка!","Контакт или параметр контакта не найдены",sep="\n",end="\n\n")
 
     autosave()
 
@@ -170,6 +168,8 @@ def close_app():
 
     globals()['app_active'] = False
 
+    print("Приложение закрыто\n")
+
     return
 
 # Словарь операций
@@ -177,34 +177,29 @@ def close_app():
 def main_cycle():
 
     operations_dict = {
-                #    'add': add_contact, 
-                #    'del': del_contact, 
-                #    'find': find_contact,
-                #    'all': show_all, 
-                   'edit': edit_contact,
-                #    'import': import_contacts,
-                #    'export': export_contacts,
-                    'close': close_app,
-                   }
+                        # 'add': [add_contact, "Добавить контакт"],
+                        # 'del': [del_contact, "Удалить контакт"],
+                        # 'find': [find_contact,"Найти контакт"],
+                        # 'all': [show_all, "Показать все контакты"],
+                        'edit': [edit_contact,"Изменить контакт"],
+                        # 'load': [load,"Загрузить телефонную книгу"],
+                        'save': [save,"Сохранить телефонную книгу"],
+                        'close': [close_app,"Закрыть приложение"],
+                        }
 
     while app_active:
 
-        print(f"""В книге  
-
-Доступные команды:
+        print(f"В книге {len(phonebook)} контактов",
+              "Доступные команды:",
+              "\n".join([f"{i} - {operations_dict[i][1]}" for i in operations_dict.keys()]),sep="\n\n",end="\n\n")
                
-add - добавить контакт 
-del - удалить контакт
-find - поиск контакта
-all - показать все контакты
-close - закрыть приложение
-edit - изменить контакт
-""")
+
         
         command = input('Введите комманду: ')
+        print()
             
         try: 
-            operations_dict[command]()
+            operations_dict[command][0]()
         
         except:
             print('Команда не найдена')
@@ -220,4 +215,5 @@ edit - изменить контакт
 
 app_active = True
 phonebook = autoload()
+print("")
 main_cycle()
