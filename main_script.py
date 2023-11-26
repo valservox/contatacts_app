@@ -141,6 +141,73 @@ def load():
 
     return
 
+def add_contact():
+
+    name= input('Введите имя: ')
+
+    phones = int(input('Введите номер телефона: '))
+
+    email = input('Введите email: ')
+
+    birthday = input('Введите день рождения: ')
+
+    contact = {"phones": [int(phones)], "email": email, "birthday": birthday}
+
+    phonebook[name] = contact
+
+    return
+
+def show_all():
+
+    print(phonebook)
+
+def del_contact():
+
+    name = input('Введите имя контакта чтоб удалить: ')
+
+    del phonebook[name]
+
+    print(f'Контакт с именем {name} удален!')
+
+def find_contact():
+
+    search_field = input('Введите по какому параметру ведем поиск: Имя, Телефон, Почта ? ')
+
+    print()
+
+    if search_field == 'Имя':
+
+        name = input('Введите имя: ')
+
+        if name in phonebook:
+
+            return print(phonebook[name])
+        
+        else:
+
+            return print('Контакт не найден в телефонной книге!')
+        
+    elif search_field == 'Телефон':
+
+        phones = int(input('Введите номер телефона: '))
+
+        for name, contact_info in phonebook.items():
+
+            if phones in contact_info['phones']:
+
+                return print(name, contact_info)
+            
+
+    elif search_field == 'Почта':
+
+        email = input('Введите почту: ')
+
+        for name, contact_info in phonebook.items():
+
+            if 'email' in contact_info and contact_info['email'] == email:
+
+                return print(name, contact_info)
+
 def edit_contact():
 
     name = (input('Введите имя для редактирования контакта: '))
@@ -211,10 +278,10 @@ def close_app():
 def main_cycle():
 
     operations_dict = {
-                        # 'add': [add_contact, "Добавить контакт"],
-                        # 'del': [del_contact, "Удалить контакт"],
-                        # 'find': [find_contact,"Найти контакт"],
-                        # 'all': [show_all, "Показать все контакты"],
+                        'add': [add_contact, "Добавить контакт"],
+                        'del': [del_contact, "Удалить контакт"],
+                        'find': [find_contact,"Найти контакт"],
+                        'all': [show_all, "Показать все контакты"],
                         'edit': [edit_contact,"Изменить контакт"],
                         'load': [load,"Загрузить телефонную книгу"],
                         'save': [save,"Сохранить телефонную книгу"],
