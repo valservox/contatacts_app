@@ -29,6 +29,7 @@ import datetime
 
 save_dir = r"savefiles"
 autosave_dir = r"savefiles\autosaves"
+load_dir = r"import"
 
 # Операции
 
@@ -108,6 +109,35 @@ def save():
     return
 
 def load():
+
+    filelist = get_file_list(load_dir)[0]
+
+    print(*[f"{i} - {j}" for i, j in enumerate(filelist)],end="\n\n")
+
+    print('Выберите номер файла для загрузки телефонной книги',"Внимание! При загрузке данные в телефонной книге перезапишутся!",sep="\n")
+
+    file_num = int(input())
+    print()
+
+    if file_num > len(filelist) - 1:
+        return print ("Ошибка!","Указанный номер находится вне диапазона списка доступных файлов",sep="\n",end="\n\n")
+
+    print("Загрузка телефонной книги...")
+
+    os.chdir(load_dir)
+
+    try:
+        with open(filelist[file_num], "r", encoding="utf-8") as ct:
+            
+            phonebook = json.load(ct)
+            print("Загрузка завершена")
+
+    except:
+        print("Ошибка!","Телефонная книга не загружена!",sep="\n",end="\n\n")
+
+    os.chdir("..")
+
+    print('')
 
     return
 
