@@ -163,16 +163,39 @@ def add_contact():
     return
 
 def show_all():
-    for name, contact_info in phonebook.items():
-        print(f'Имя: {name}')
-        print(f'Телефоны: {contact_info['phones']}')
-        # Еще один вариант вывода номера телефона на новой строке (Мне показался первый вариант более компактным)
-        # print('Телефоны:')
-        # for phone in contact_info['phones']:
-        #     print(phone)
-        print(f'Email: {contact_info["email"]}')
-        print(f'День рождения: {contact_info["birthday"]}')
-        print('------------------')
+    # for name, contact_info in phonebook.items():
+    #     print(f'Имя: {name}')
+    #     print(f'Телефоны: {contact_info['phones']}')
+    #     # Еще один вариант вывода номера телефона на новой строке (Мне показался первый вариант более компактным)
+    #     # print('Телефоны:')
+    #     # for phone in contact_info['phones']:
+    #     #     print(phone)
+    #     print(f'Email: {contact_info["email"]}')
+    #     print(f'День рождения: {contact_info["birthday"]}')
+    #     print('------------------') 
+
+# Новый вариант 
+    print('Список контактов: ')
+    for name in phonebook:
+        print('')
+        print(name)
+        print('_____________')
+
+    print('Для выбора контакта и просмотра сведений о нем, введите его полное имя или первую букву имени: ')
+    search_letter = input("Введите букву для поиска: ")
+    found = False
+    for name in phonebook:
+        if search_letter.lower() in name.lower():
+            contact_info = phonebook[name]
+            print('')
+            print(f'Имя: {name}')
+            print(f'Телефоны: {contact_info["phones"]}')
+            print(f'Email: {contact_info["email"]}')
+            print(f'День рождения: {contact_info["birthday"]}')
+            print('_____________')
+            found = True
+            if not found:
+                print("Контакт с такой буквой в имени не найден.")
 
 def del_contact():
 
