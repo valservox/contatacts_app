@@ -66,7 +66,7 @@ def autosave():
 
     file_list, full_path = get_file_list(autosave_dir)[0], get_file_list(autosave_dir)[1]
 
-    if len(file_list) == 25:
+    if len(file_list) == 10:
         
         oldest_file = min(full_path, key=os.path.getctime)
         os.remove(oldest_file)
