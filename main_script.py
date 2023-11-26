@@ -131,6 +131,60 @@ def load():
 
     return phonebook
 
+def add_contact():
+    name= input('Введите имя: ')
+    count_phone = int(input(f'Введите сколько номеров у контакта {name} от 1 до 10: '))
+    phones = []
+    if count_phone == 1:
+        phone = int(input('Введите номер телефона: '))
+        phones.append(phone)
+    elif count_phone > 1 and count_phone <= 10:
+        for count in range(count_phone):
+            phone = int(input(f'Введите номер телефона {count + 1}: '))
+            phones.append(phone)
+    else:
+        print('Количество телефонов для одного контакта не может быть больше десяти, равно нулю или быть отрицательным значением')
+        return
+    email = input('Введите email: ')
+    birthday = input('Введите день рождения: ')
+    contact = {"phones": phones, "email": email, "birthday": birthday}
+    phonebook[name] = contact
+    return
+
+def show_all():
+    # for name, contact_info in phonebook.items():
+    #     print(f'Имя: {name}')
+    #     print(f'Телефоны: {contact_info['phones']}')
+    #     # Еще один вариант вывода номера телефона на новой строке (Мне показался первый вариант более компактным)
+    #     # print('Телефоны:')
+    #     # for phone in contact_info['phones']:
+    #     #     print(phone)
+    #     print(f'Email: {contact_info["email"]}')
+    #     print(f'День рождения: {contact_info["birthday"]}')
+    #     print('------------------') 
+
+# Новый вариант 
+    print('Список контактов: ')
+    for name in phonebook:
+        print('')
+        print(name)
+        print('_____________')
+
+    print('Для выбора контакта и просмотра сведений о нем, введите его полное имя или первую букву имени: ')
+    search_letter = input("Введите букву для поиска: ")
+    found = False
+    for name in phonebook:
+        if search_letter.lower() in name.lower():
+            contact_info = phonebook[name]
+            print('')
+            print(f'Имя: {name}')
+            print(f'Телефоны: {contact_info["phones"]}')
+            print(f'Email: {contact_info["email"]}')
+            print(f'День рождения: {contact_info["birthday"]}')
+            print('_____________')
+            found = True
+            if not found:
+                print("Контакт с такой буквой в имени не найден.")
 
 def edit_contact():
 
