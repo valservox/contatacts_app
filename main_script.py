@@ -29,6 +29,7 @@ import datetime
 
 save_dir = r"savefiles"
 autosave_dir = r"savefiles\autosaves"
+load_dir = r"import"
 
 # Операции
 
@@ -109,7 +110,27 @@ def save():
 
 def load():
 
-    return
+    all_files = get_file_list(autosave_dir)[1] + get_file_list(save_dir)[1] 
+    
+    oldest_file = max(all_files, key=os.path.getctime)
+
+    print("Загрузка телефонной книги...")
+
+    try:
+
+        with open(oldest_file, "r", encoding="utf-8") as ct:
+            
+            phonebook = json.load(ct)
+            print("Загрузка завершена")
+
+    except:
+
+        print("Ошибка!","Телефонная книга не загружена!",sep="\n",end="\n\n")
+
+        phonebook = dict()
+
+    return phonebook
+
 
 def edit_contact():
 
