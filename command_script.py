@@ -1,37 +1,14 @@
-# Модуль с выведенными коммандами для телефонного справочника и ТГ бота
-import os
-import json
-import datetime
-from dir_script import autosave, autoload, phonebook
-
-# save_dir = r"savefiles"
-# autosave_dir = r"savefiles\autosaves"
-# load_dir = r"import"
-
-#get_file_list(dir)
-
+from dir_script import autosave, phonebook
 
 # Выводит список всех контактов в адресной книге и совершает поиск по букве по контактам
 def show_all():
-    # for name, contact_info in phonebook.items():
-    #     print(f'Имя: {name}')
-    #     print(f'Телефоны: {contact_info['phones']}')
-    #     # Еще один вариант вывода номера телефона на новой строке (Мне показался первый вариант более компактным)
-    #     # print('Телефоны:')
-    #     # for phone in contact_info['phones']:
-    #     #     print(phone)
-    #     print(f'Email: {contact_info["email"]}')
-    #     print(f'День рождения: {contact_info["birthday"]}')
-    #     print('------------------') 
-
-# Новый вариант 
     print('Список контактов: ')
     for name in phonebook:
         print('')
         print(name)
         print('_____________')
 
-    print('Для выбора контакта и просмотра сведений о нем, введите его полное имя или первую букву имени: ')
+    print('Для выбора контакта и просмотра сведений о нем, введите его полное имя или любую букву имени: ')
     search_letter = input("Введите букву для поиска: ")
     found = False
     for name in phonebook:
@@ -47,7 +24,7 @@ def show_all():
             if not found:
                 print("Контакт с такой буквой в имени не найден.")
 
-# Изменение контакта Номера телефона, Имени, Имейла, ДР
+# Изменение контакта Номера телефона, Имейла, ДР
 def edit_contact():
 
     name = (input('Введите имя для редактирования контакта: '))
@@ -103,8 +80,6 @@ birthdate - Дата рождения
 
     return
 
-
-
 def add_contact():
     name= input('Введите имя: ')
     count_phone = int(input(f'Введите сколько номеров у контакта {name} от 1 до 10: '))
@@ -125,11 +100,13 @@ def add_contact():
     phonebook[name] = contact
     return
 
+# Удаление контакта
 def del_contact(phonebook):
     name = input('Введите имя контакта чтоб удалить: ')
     del phonebook[name]
     print(f'Контакт с именем {name} удален!')
 
+# Поиск контакта либо по Имени, либо по Телефону, по Почте
 def find_contact():
 
     search_field = input('Введите по какому параметру ведем поиск: Имя, Телефон, Почта ? ')
@@ -169,4 +146,3 @@ def find_contact():
 
                 return print(name, contact_info)
 
-#phonebook = autoload()
