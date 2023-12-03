@@ -41,6 +41,7 @@ def add_contact2(phonebook, name, phones, email, birthday):
     contact = {"phones": phones, "email": email, "birthday": birthday}
     phonebook[name] = contact
     save()
+    autosave()
 
 
 ############################################
@@ -160,6 +161,7 @@ def process_new_name(message):
     phonebook[new_name] = phonebook.pop(contact_name)
     contact_name = new_name
     save()
+    autosave()
     bot.send_message(message.chat.id, "Имя успешно изменено.")
 
 # def process_new_phone(message):
@@ -172,25 +174,28 @@ def process_new_name(message):
 
 def process_new_phone(message):
     global contact_name
-    new_phone = message.text
+    new_phone = int(message.text)
     if contact_name in phonebook:
         phonebook[contact_name]['phones'] = [new_phone]
         save()
-        bot.send_message(message.chat.id, f"Номер контакта {contact_name} телефона успешно изменен.")
+        autosave()
+        bot.send_message(message.chat.id, f"Номер телефона контакта {contact_name} успешно изменен.")
 
 def process_new_email(message):
     global contact_name
     new_email = message.text
     phonebook[contact_name]['email'] = new_email
     save()
-    bot.send_message(message.chat.id, "Адрес электронной почты успешно изменен.")
+    autosave()
+    bot.send_message(message.chat.id, f"Адрес электронной контакта {contact_name} почты успешно изменен.")
 
 def process_new_birthday(message):
     global contact_name
     new_birthday = message.text
     phonebook[contact_name]['birthday'] = new_birthday
     save()
-    bot.send_message(message.chat.id, "Дата рождения успешно изменена.")
+    autosave()
+    bot.send_message(message.chat.id, f"Дата рождения контакта {contact_name} успешно изменена.")
 
 
 
