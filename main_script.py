@@ -29,7 +29,7 @@
 '''
 
 from command_script import add_contact, show_all, edit_contact, del_contact, find_contact
-from dir_script import load, save, autoload, autosave, phonebook
+from dir_script import load, save, autosave, phonebook
 
 # Операция завершения программы 
 def close_app():
