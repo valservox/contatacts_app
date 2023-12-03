@@ -1,3 +1,5 @@
+# ссылка на созданный мной ТГ-бот: t.me/HWphonebookbot
+
 import telebot
 import json
 from telebot import types

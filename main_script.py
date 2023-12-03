@@ -21,17 +21,15 @@
 4. Использование функций. Ваша программа
 не должна быть линейной
 '''
+# структура контакта
+'''
+     {"дядя Ваня": {'phones': [1212121,5555555],
+                           'email': '777@mail.com', 'birthday': '10.10.1990'},
+            }
+'''
 
-import os
-import json
-import datetime
-from command_script import add_contact, show_all, edit_contact, del_contact
+from command_script import add_contact, show_all, edit_contact, del_contact, find_contact
 from dir_script import load, save, autoload, autosave, phonebook
-
-# save_dir = r"savefiles"
-# autosave_dir = r"savefiles\autosaves"
-# load_dir = r"import"
-
 
 # Операция завершения программы 
 def close_app():
@@ -52,7 +50,7 @@ def main_cycle():
     operations_dict = {
                         'add': [add_contact, "Добавить контакт"],
                         'del': [del_contact, "Удалить контакт"],
-                        #'find': [find_contact,"Найти контакт"],
+                        'find': [find_contact,"Найти контакт"],
                         'all': [show_all, "Показать все контакты"],
                         'edit': [edit_contact,"Изменить контакт"],
                         'load': [load,"Загрузить телефонную книгу"],
@@ -77,17 +75,7 @@ def main_cycle():
         except:
             print('Команда не найдена')
 
-        
-
-# структура контакта
-'''
-     {"дядя Ваня": {'phones': [1212121,5555555],
-                           'email': '777@mail.com', 'birthday': '10.10.1990'},
-            }
-'''
-
 app_active = True
 
-#phonebook = autoload()
 print("")
 main_cycle()

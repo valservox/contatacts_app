@@ -130,4 +130,43 @@ def del_contact(phonebook):
     del phonebook[name]
     print(f'Контакт с именем {name} удален!')
 
+def find_contact():
+
+    search_field = input('Введите по какому параметру ведем поиск: Имя, Телефон, Почта ? ')
+
+    print()
+
+    if search_field == 'Имя':
+
+        name = input('Введите имя: ')
+
+        if name in phonebook:
+
+            return print(phonebook[name])
+        
+        else:
+
+            return print('Контакт не найден в телефонной книге!')
+        
+    elif search_field == 'Телефон':
+
+        phones = int(input('Введите номер телефона: '))
+
+        for name, contact_info in phonebook.items():
+
+            if phones in contact_info['phones']:
+
+                return print(name, contact_info)
+            
+
+    elif search_field == 'Почта':
+
+        email = input('Введите почту: ')
+
+        for name, contact_info in phonebook.items():
+
+            if 'email' in contact_info and contact_info['email'] == email:
+
+                return print(name, contact_info)
+
 #phonebook = autoload()
