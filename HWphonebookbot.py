@@ -13,9 +13,8 @@ bot = telebot.TeleBot('6315653937:AAHTlQ2NYEqBOLjoGOt0Up56cqV4DT7-nDc')
 contact_name = None
 @bot.message_handler(commands=['start'])
 def main_start(message):
-    bot.send_message(message.chat.id, f'''Привет {message.from_user.first_name}! Это Телефонная-книга бот.\n Я храню список твоих контактов, могу добавлять, 
-    удалять, выводить и изменять контакты. Список команд: <b>start</b> - приветственное окно чат-бота;\n <b>add</b> - добавить контакт;\n 
-    <b>del</b> - удалить контакт;\n <b>find</b> - поиск контакта;\n <b>all</b> - показать все контакты;\n''', parse_mode='html')
+    bot.send_message(message.chat.id, f'''Привет <b>{message.from_user.first_name}</b>!  Это Телефонная-книга бот.\n Я храню список твоих контактов, могу добавлять, удалять, выводить и изменять контакты.
+Список команд:\n <b>start</b> - приветственное окно чат-бота;\n <b>add</b> - добавить контакт;\n <b>del</b> - удалить контакт;\n <b>all</b> - показать все контакты и изменить выбранный контакт.\n''', parse_mode='html')
 
 
 # Запуск команды add для добавления контакта
