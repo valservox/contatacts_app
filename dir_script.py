@@ -121,6 +121,4 @@ def load():
     return phonebook
 
 
-
-#phonebook = {}
 phonebook = autoload()
