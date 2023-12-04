@@ -21,12 +21,14 @@
 4. Использование функций. Ваша программа
 не должна быть линейной
 '''
+
 # структура контакта
 '''
      {"дядя Ваня": {'phones': [1212121,5555555],
                            'email': '777@mail.com', 'birthday': '10.10.1990'},
             }
 '''
+
 
 from command_script import add_contact, show_all, edit_contact, del_contact, find_contact
 from dir_script import load, save, autosave, phonebook
@@ -35,7 +37,7 @@ from dir_script import load, save, autosave, phonebook
 def close_app():
     save()
 
-    autosave()
+    
 
     globals()['app_active'] = False
 
