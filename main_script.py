@@ -110,109 +110,82 @@ def save():
 
 def load():
 
-    filelist = get_file_list(load_dir)[0]
 
-    print(*[f"{i} - {j}" for i, j in enumerate(filelist)],end="\n\n")
-
-    print('Выберите номер файла для загрузки телефонной книги',"Внимание! При загрузке данные в телефонной книге перезапишутся!",sep="\n")
-
-    file_num = int(input())
-    print()
-
-    if file_num > len(filelist) - 1:
-        return print ("Ошибка!","Указанный номер находится вне диапазона списка доступных файлов",sep="\n",end="\n\n")
+    all_files = get_file_list(autosave_dir)[1] + get_file_list(save_dir)[1] 
+    
+    oldest_file = max(all_files, key=os.path.getctime)
 
     print("Загрузка телефонной книги...")
 
-    os.chdir(load_dir)
-
     try:
-        with open(filelist[file_num], "r", encoding="utf-8") as ct:
+
+        with open(oldest_file, "r", encoding="utf-8") as ct:
             
             phonebook = json.load(ct)
             print("Загрузка завершена")
 
-    except:
+    except
+
         print("Ошибка!","Телефонная книга не загружена!",sep="\n",end="\n\n")
 
-    os.chdir("..")
+        phonebook = dict()
 
-    print('')
-
-    return
+    return phonebook
 
 def add_contact():
-
     name= input('Введите имя: ')
-
-    phones = int(input('Введите номер телефона: '))
-
+    count_phone = int(input(f'Введите сколько номеров у контакта {name} от 1 до 10: '))
+    phones = []
+    if count_phone == 1:
+        phone = int(input('Введите номер телефона: '))
+        phones.append(phone)
+    elif count_phone > 1 and count_phone <= 10:
+        for count in range(count_phone):
+            phone = int(input(f'Введите номер телефона {count + 1}: '))
+            phones.append(phone)
+    else:
+        print('Количество телефонов для одного контакта не может быть больше десяти, равно нулю или быть отрицательным значением')
+        return
     email = input('Введите email: ')
-
     birthday = input('Введите день рождения: ')
-
-    contact = {"phones": [int(phones)], "email": email, "birthday": birthday}
-
+    contact = {"phones": phones, "email": email, "birthday": birthday}
     phonebook[name] = contact
-
-    
-
     return
 
 def show_all():
+    # for name, contact_info in phonebook.items():
+    #     print(f'Имя: {name}')
+    #     print(f'Телефоны: {contact_info['phones']}')
+    #     # Еще один вариант вывода номера телефона на новой строке (Мне показался первый вариант более компактным)
+    #     # print('Телефоны:')
+    #     # for phone in contact_info['phones']:
+    #     #     print(phone)
+    #     print(f'Email: {contact_info["email"]}')
+    #     print(f'День рождения: {contact_info["birthday"]}')
+    #     print('------------------') 
 
-    print(phonebook)
+# Новый вариант 
+    print('Список контактов: ')
+    for name in phonebook:
+        print('')
+        print(name)
+        print('_____________')
 
-def del_contact():
-
-    name = input('Введите имя контакта чтоб удалить: ')
-
-    del phonebook[name]
-
-    print(f'Контакт с именем {name} удален!')
-
-    
-
-    return
-
-def find_contact():
-
-    search_field = input('Введите по какому параметру ведем поиск: Имя, Телефон, Почта ? ')
-
-    print()
-
-    if search_field == 'Имя':
-
-        name = input('Введите имя: ')
-
-        if name in phonebook:
-
-            return print(phonebook[name])
-        
-        else:
-
-            return print('Контакт не найден в телефонной книге!')
-        
-    elif search_field == 'Телефон':
-
-        phones = int(input('Введите номер телефона: '))
-
-        for name, contact_info in phonebook.items():
-
-            if phones in contact_info['phones']:
-
-                return print(name, contact_info)
-            
-
-    elif search_field == 'Почта':
-
-        email = input('Введите почту: ')
-
-        for name, contact_info in phonebook.items():
-
-            if 'email' in contact_info and contact_info['email'] == email:
-
-                return print(name, contact_info)
+    print('Для выбора контакта и просмотра сведений о нем, введите его полное имя или первую букву имени: ')
+    search_letter = input("Введите букву для поиска: ")
+    found = False
+    for name in phonebook:
+        if search_letter.lower() in name.lower():
+            contact_info = phonebook[name]
+            print('')
+            print(f'Имя: {name}')
+            print(f'Телефоны: {contact_info["phones"]}')
+            print(f'Email: {contact_info["email"]}')
+            print(f'День рождения: {contact_info["birthday"]}')
+            print('_____________')
+            found = True
+            if not found:
+                print("Контакт с такой буквой в имени не найден.")
 
 def edit_contact():
 
