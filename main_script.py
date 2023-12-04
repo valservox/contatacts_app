@@ -67,7 +67,7 @@ def autosave():
 
     file_list, full_path = get_file_list(autosave_dir)[0], get_file_list(autosave_dir)[1]
 
-    if len(file_list) == 25:
+    if len(file_list) == 10:
         
         oldest_file = min(full_path, key=os.path.getctime)
         os.remove(oldest_file)
@@ -110,6 +110,7 @@ def save():
 
 def load():
 
+
     all_files = get_file_list(autosave_dir)[1] + get_file_list(save_dir)[1] 
     
     oldest_file = max(all_files, key=os.path.getctime)
@@ -123,7 +124,7 @@ def load():
             phonebook = json.load(ct)
             print("Загрузка завершена")
 
-    except:
+    except
 
         print("Ошибка!","Телефонная книга не загружена!",sep="\n",end="\n\n")
 
@@ -237,13 +238,13 @@ birthdate - Дата рождения
     except:
         print("Ошибка!","Контакт или параметр контакта не найдены",sep="\n",end="\n\n")
 
-    autosave()
+    
 
     return
 
 def close_app():
 
-    autosave()
+    
 
     globals()['app_active'] = False
 
@@ -256,10 +257,10 @@ def close_app():
 def main_cycle():
 
     operations_dict = {
-                        # 'add': [add_contact, "Добавить контакт"],
-                        # 'del': [del_contact, "Удалить контакт"],
-                        # 'find': [find_contact,"Найти контакт"],
-                        # 'all': [show_all, "Показать все контакты"],
+                        'add': [add_contact, "Добавить контакт"],
+                        'del': [del_contact, "Удалить контакт"],
+                        'find': [find_contact,"Найти контакт"],
+                        'all': [show_all, "Показать все контакты"],
                         'edit': [edit_contact,"Изменить контакт"],
                         'load': [load,"Загрузить телефонную книгу"],
                         'save': [save,"Сохранить телефонную книгу"],
@@ -282,6 +283,8 @@ def main_cycle():
         
         except:
             print('Команда не найдена')
+
+        autosave()
 
         
 
