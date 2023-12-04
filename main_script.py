@@ -22,227 +22,20 @@
 не должна быть линейной
 '''
 
-import os
-import json
-import datetime
-
-
-save_dir = r"savefiles"
-autosave_dir = r"savefiles\autosaves"
-load_dir = r"import"
-
-# Операции
-
-def get_file_list(dir):
-
-    file_list = os.listdir(dir)
-    full_path = ["{0}/{1}".format(dir,x) for x in file_list]
-
-    return (file_list, full_path)
-
-def autoload():
-
-    all_files = get_file_list(autosave_dir)[1] + get_file_list(save_dir)[1] 
-    
-    oldest_file = max(all_files, key=os.path.getctime)
-
-    print("Загрузка телефонной книги...")
-
-    try:
-
-        with open(oldest_file, "r", encoding="utf-8") as ct:
-            
-            phonebook = json.load(ct)
-            print("Загрузка завершена")
-
-    except:
-
-        print("Ошибка!","Телефонная книга не загружена!",sep="\n",end="\n\n")
-
-        phonebook = dict()
-
-    return phonebook
-
-def autosave():
-
-    file_list, full_path = get_file_list(autosave_dir)[0], get_file_list(autosave_dir)[1]
-
-    if len(file_list) == 10:
-        
-        oldest_file = min(full_path, key=os.path.getctime)
-        os.remove(oldest_file)
-
-    os.chdir(autosave_dir)
-    timestamp = int(datetime.datetime.now().timestamp())
-    autosave_name = f"autosave_{timestamp}.json"
-
-    print("Автосохранение телефонной книги...")
-
-    try:
-
-        with open(autosave_name, "w", encoding="utf-8") as ct:
-    
-            json.dump(phonebook, ct)   
-            print("Автосохраниение завершено")
-
-    except:
-        print("Ошибка!","Телефонная книга не сохранена",sep="\n",end="\n\n")
-    
-    return
-
-def save():
-
-    os.chdir(save_dir) if os.getcwd().basename != save_dir else None
-    
-    save_name = input("Введите имя файла для сохранения: ")
-
-    try:
-
-        with open(save_name, "w", encoding="utf-8") as ct:
-    
-            json.dump(phonebook, ct)   
-            print("Cохраниение завершено")
-
-    except:
-        print("Ошибка!","Телефонная книга не сохранена",sep="\n",end="\n\n")
-
-    return
-
-def load():
-
-
-    all_files = get_file_list(autosave_dir)[1] + get_file_list(save_dir)[1] 
-    
-    oldest_file = max(all_files, key=os.path.getctime)
-
-    print("Загрузка телефонной книги...")
-
-    try:
-
-        with open(oldest_file, "r", encoding="utf-8") as ct:
-            
-            phonebook = json.load(ct)
-            print("Загрузка завершена")
-
-    except
-
-        print("Ошибка!","Телефонная книга не загружена!",sep="\n",end="\n\n")
-
-        phonebook = dict()
-
-    return phonebook
-
-def add_contact():
-    name= input('Введите имя: ')
-    count_phone = int(input(f'Введите сколько номеров у контакта {name} от 1 до 10: '))
-    phones = []
-    if count_phone == 1:
-        phone = int(input('Введите номер телефона: '))
-        phones.append(phone)
-    elif count_phone > 1 and count_phone <= 10:
-        for count in range(count_phone):
-            phone = int(input(f'Введите номер телефона {count + 1}: '))
-            phones.append(phone)
-    else:
-        print('Количество телефонов для одного контакта не может быть больше десяти, равно нулю или быть отрицательным значением')
-        return
-    email = input('Введите email: ')
-    birthday = input('Введите день рождения: ')
-    contact = {"phones": phones, "email": email, "birthday": birthday}
-    phonebook[name] = contact
-    return
-
-def show_all():
-    # for name, contact_info in phonebook.items():
-    #     print(f'Имя: {name}')
-    #     print(f'Телефоны: {contact_info['phones']}')
-    #     # Еще один вариант вывода номера телефона на новой строке (Мне показался первый вариант более компактным)
-    #     # print('Телефоны:')
-    #     # for phone in contact_info['phones']:
-    #     #     print(phone)
-    #     print(f'Email: {contact_info["email"]}')
-    #     print(f'День рождения: {contact_info["birthday"]}')
-    #     print('------------------') 
-
-# Новый вариант 
-    print('Список контактов: ')
-    for name in phonebook:
-        print('')
-        print(name)
-        print('_____________')
-
-    print('Для выбора контакта и просмотра сведений о нем, введите его полное имя или первую букву имени: ')
-    search_letter = input("Введите букву для поиска: ")
-    found = False
-    for name in phonebook:
-        if search_letter.lower() in name.lower():
-            contact_info = phonebook[name]
-            print('')
-            print(f'Имя: {name}')
-            print(f'Телефоны: {contact_info["phones"]}')
-            print(f'Email: {contact_info["email"]}')
-            print(f'День рождения: {contact_info["birthday"]}')
-            print('_____________')
-            found = True
-            if not found:
-                print("Контакт с такой буквой в имени не найден.")
-
-def edit_contact():
-
-    name = (input('Введите имя для редактирования контакта: '))
-
-    def edit_phone():
-
-        n_phone = int(input(f'У контакта {name} Несколько телефонов. Введите порядковый номер для редактирования: ')) if len(phonebook[name]['phones']) > 1 else 1
-
-        new_phone = int(input(f'Введите номер телефона {n_phone} для контакта {name}: '))
-
-        phonebook[name]['phones'][n_phone - 1] = new_phone
-
-        return
-    
-    def edit_email():
-    
-        new_email = input(f'Введите новый Email для контакта {name}: ')
-
-        phonebook[name]['email'] = new_email
-    
-        return
-    
-    def edit_birthdate():
-    
-        new_birthdate = input(f'Введите дату рождения для контакта {name}: ')
-
-        phonebook[name]['birthday'] = new_birthdate
-    
-        return
-    
-    edit_dict = {
-                 'phone': edit_phone,
-                 'email':edit_email,
-                 'birthdate':edit_birthdate
-                 }
-
-    field = input('''
-Выберите поле для редактирования:
-                  
-phone - Телефон (по умолчанию 1й в списке) 
-email - Электронная почта
-birthdate - Дата рождения
+# структура контакта
 '''
-                  )
-    
-    try:
-        edit_dict[field]()
+     {"дядя Ваня": {'phones': [1212121,5555555],
+                           'email': '777@mail.com', 'birthday': '10.10.1990'},
+            }
+'''
 
-    except:
-        print("Ошибка!","Контакт или параметр контакта не найдены",sep="\n",end="\n\n")
 
-    
+from command_script import add_contact, show_all, edit_contact, del_contact, find_contact
+from dir_script import load, save, autosave, phonebook
 
-    return
-
+# Операция завершения программы 
 def close_app():
+    save()
 
     
 
@@ -250,7 +43,7 @@ def close_app():
 
     print("Приложение закрыто\n")
 
-    return
+    return False
 
 # Словарь операций
 
@@ -284,18 +77,7 @@ def main_cycle():
         except:
             print('Команда не найдена')
 
-        autosave()
-
-        
-
-# структура контакта
-'''
-     {"дядя Ваня": {'phones': [1212121,5555555],
-                           'email': '777@mail.com', 'birthday': '10.10.1990'},
-            }
-'''
-
 app_active = True
-phonebook = autoload()
+
 print("")
 main_cycle()
