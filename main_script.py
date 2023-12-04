@@ -155,6 +155,8 @@ def add_contact():
 
     phonebook[name] = contact
 
+    
+
     return
 
 def show_all():
@@ -168,6 +170,10 @@ def del_contact():
     del phonebook[name]
 
     print(f'Контакт с именем {name} удален!')
+
+    
+
+    return
 
 def find_contact():
 
@@ -259,13 +265,13 @@ birthdate - Дата рождения
     except:
         print("Ошибка!","Контакт или параметр контакта не найдены",sep="\n",end="\n\n")
 
-    autosave()
+    
 
     return
 
 def close_app():
 
-    autosave()
+    
 
     globals()['app_active'] = False
 
@@ -304,6 +310,8 @@ def main_cycle():
         
         except:
             print('Команда не найдена')
+
+        autosave()
 
         
 
